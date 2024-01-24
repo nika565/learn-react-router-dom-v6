@@ -127,3 +127,165 @@ export const Post = () => {
     )
 }
 ```
+
+## Redirecionamento:
+
+Para redirecionar o usuário, podemos usar a função **`navigate()` :**
+
+```jsx
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import './style.css'
+
+export const Redirect = () => {
+
+    // Estado para representar os segundos
+    const [time, setTime] = useState(3);
+    const timeout = useRef(0)
+
+    // Serve para redirecionar a página
+    const navigate = useNavigate()
+
+    useEffect(() => {
+
+        // Mudando o valor do temporizador
+        timeout.current = setTimeout(() => {
+            setTime(t => t-1)
+        }, 1000)
+
+        // Quando atingir zero, o usuário será redirecionado
+        if (time <= 0) {
+            navigate('/about')
+        }
+        
+        // Parando o contador
+        return () => {
+            clearTimeout(timeout.current)
+        }
+
+    }, [time])
+
+    return (
+        <div>
+            <h1>Você sera redirecionado em: {time}</h1>
+        </div>
+    )
+}
+```
+
+## Rota 404:
+
+Para usar uma rota 404 basta colocar um asterisco (*) no atributo `path` no componente `Route` e renderizar o componente que representa a página não encontrada.
+
+Exemplo:
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './styles/global.css'
+
+// Importações do react-router-dom
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+// Meus componentes
+import { Home } from './components/Home'
+import { NotFound } from './components/NotFound'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+
+  <React.StrictMode>
+
+    {/* Tudo relacionado com o react-router-dom precisa estar entre 
+		BrowserRouter */}
+    <BrowserRouter>
+
+      {/* Routes serve para guardar nossas rotas */}
+      <Routes>
+
+        <Route path="/" element={<Home />} />
+
+        {/* Rotá para páginas não encontradas */}
+        <Route path='*' element={<NotFound />} />
+        
+      </Routes>
+
+    </BrowserRouter>
+
+  </React.StrictMode>,
+
+)
+```
+
+## Rotas aninhadas e Outlet:
+
+As rotas aninhadas permitem que eu carregue componentes dentro de outros componentes com base nas rotas. Vamos supor que você queira acessar a rota de `posts` buscando especificamente pelo post numero 123, então seria carregado o posts 123 na mesma rota de Posts
+
+Exemplo:
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './styles/global.css'
+
+// Importações do react-router-dom
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+// Meus componentes
+import { Home } from './components/Home'
+import { Posts } from './components/Posts'
+import { Post } from './components/Post'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+
+  <React.StrictMode>
+
+    <BrowserRouter>
+
+      <Routes>
+
+        <Route path="/" element={<Home />} />
+
+        {/* Rotas aninhadas -> caso a rota acessada seja posts, o Componente 
+        Posts será exibido */}
+        <Route path='/posts' element={<Posts />}>
+          
+          {/* Caso voce passe algum valor dentro dessa rota, o componente Post
+          que representa um uníco post será renderizado. */}
+
+          <Route path=':id' element={<Post />} />
+
+        </Route>
+        
+      </Routes>
+
+    </BrowserRouter>
+
+  </React.StrictMode>,
+
+)
+```
+
+Para definir onde será renderizado, utilizamos o componente `Outlet` do react-router-dom:
+
+```jsx
+import { Outlet, useParams, useSearchParams } from 'react-router-dom'
+import './style.css'
+
+/*
+    Manipulação de parâmetros e query strings com react-router-dom
+*/
+
+export const Posts = () => {
+
+    const {id} = useParams()
+    const [qs] = useSearchParams()
+    
+    return (
+        <div>
+            <h1>Posts</h1>
+						{/* Post a ser renderizado conforme a rota especificada. */}
+            <Outlet />
+        </div>
+    )
+}
+```

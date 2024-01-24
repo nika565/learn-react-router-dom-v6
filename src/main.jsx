@@ -9,6 +9,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { About } from './components/About'
 import { Home } from './components/Home'
 import { Menu } from './components/Menu'
+import { Posts } from './components/Posts'
+import { Redirect } from './components/Redirect'
+import { NotFound } from './components/NotFound'
 import { Post } from './components/Post'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -31,9 +34,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
 
-        {/* Utilizando parâmetros na minha rota */}
-        <Route path='/posts/:id' element={<Post />} />
-        <Route path='/posts' element={<Post />} />
+        {/* Rotas aninhadas -> caso a rota acessada seja posts, o Componente 
+        Posts será exibido */}
+        <Route path='/posts' element={<Posts />}>
+          
+          {/* Caso voce passe algum valor dentro dessa rota, o componente Post
+          que representa um uníco post será renderizado. */}
+
+          <Route path=':id' element={<Post />} />
+        </Route>
+
+        {/* Redirecionamento */}
+        <Route path='/redirect' element={<Redirect />} />
+
+        {/* Rotá para páginas não encontradas */}
+        <Route path='*' element={<NotFound />} />
+        
 
       </Routes>
 
