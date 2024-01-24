@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { About } from './components/About'
 import { Home } from './components/Home'
 import { Menu } from './components/Menu'
+import { Post } from './components/Post'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -29,6 +30,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         e o componente a ser renderizado */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+
+        {/* Utilizando parâmetros na minha rota */}
+        <Route path='/posts/:id' element={<Post />} />
+        <Route path='/posts' element={<Post />} />
 
       </Routes>
 

@@ -81,3 +81,49 @@ export const Menu = () => {
     )
 }
 ```
+
+## URL Params e Query Strings:
+
+Primeiro, devemos adicionar uma rota especificando para o react-router-dom que vamos usar URL params:
+
+```jsx
+<BrowserRouter>
+
+      {/* Routes serve para guardar nossas rotas */}
+      <Routes>
+
+        {/* Utilizando parâmetros na minha rota */}
+        <Route path='/posts/:id' element={<Post />} />
+        <Route path='/posts' element={<Post />} />
+
+      </Routes>
+
+    </BrowserRouter>
+```
+
+Capturando os parâmetros no meu componente:
+
+```jsx
+// Hooks para lidar com urlParams e query strings
+import { useParams, useSearchParams } from 'react-router-dom'
+import './style.css'
+
+/*
+    Manipulação de parâmetros e query strings com react-router-dom
+*/
+
+export const Post = () => {
+
+		// Retorna um objeto com os parâmetros de rota
+    const { id } = useParams()
+
+		// Retorna um array com as query strings 
+    const [ qs ] = useSearchParams()
+     
+    return (
+        <div>
+            <h1>Post {`Param: ${id}`} {`Query String: ${qs.get('page')}`}</h1>
+        </div>
+    )
+}
+```
